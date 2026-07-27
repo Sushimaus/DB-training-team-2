@@ -26,6 +26,11 @@ spring:
     listener:
       missing-topics-fatal: false   # don't blow up if Kafka isn't running locally
 
+server:
+  error:
+    include-message: always
+    include-stacktrace: always
+
 logging:
   level:
     com.dbtraining.reconx: DEBUG

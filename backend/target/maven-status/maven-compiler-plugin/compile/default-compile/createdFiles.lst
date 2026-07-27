@@ -34,6 +34,7 @@ com/dbtraining/reconx/repository/AppUserRepository.class
 com/dbtraining/reconx/dto/LoginResponse.class
 com/dbtraining/reconx/repository/entity/AppUser.class
 com/dbtraining/reconx/repository/entity/ReconBreak.class
+com/dbtraining/reconx/observability/KafkaHealthIndicator.class
 com/dbtraining/reconx/model/DerivativeTrade.class
 com/dbtraining/reconx/model/TradeFactory.class
 com/dbtraining/reconx/model/DerivativeTrade$Builder.class

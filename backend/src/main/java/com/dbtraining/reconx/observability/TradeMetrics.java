@@ -63,6 +63,6 @@ public class TradeMetrics {
     }
 
     public void recordTradeValue(double value) {
-        // TODO(TICKET-ADV086): record the value on the tradeValue distribution summary.
+        tradeValue.record(value);
     }
 }

@@ -54,21 +54,24 @@ public class TradeController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Long counterpartyId,
             @PageableDefault(size = 20, sort = "tradeDate", direction = Sort.Direction.DESC) Pageable pageable) {
+                Page<Trade> page = service.list(from, to, status, counterpartyId, pageable);
+                return PagedResponse.from(page, mapper::toResponse);
         // TODO(TICKET-ADV063): delegate to service.list(from, to, status, counterpartyId, pageable)
         //   and wrap the resulting Page<Trade> via PagedResponse.from(page, mapper::toResponse).
         //   For Day 1 return an empty PagedResponse so the React grid renders
         //   "no trades match" while the JPA + Specifications work is still pending.
-        return new PagedResponse<>(List.of(), 0, 20, 0, 0);
+        
     }
 
     @PostMapping
     @Operation(summary = "Create a trade")
-    public ResponseEntity<TradeResponse> create(@Valid @RequestBody TradeRequest req,
-                                                @AuthenticationPrincipal Object principal) {
+    public ResponseEntity<TradeResponse> create(@Valid @RequestBody TradeRequest req, @AuthenticationPrincipal Object principal) {
         // TODO(TICKET-ADV064): call service.create(req, actor), build a Location
         //   header at /api/v1/trades/{id}, and return 201 Created with the
         //   mapped TradeResponse body.
-        throw new UnsupportedOperationException("TICKET-ADV064");
+        String actor = String.valueOf(principal);
+        Trade saved = service.create(req, actor);
+        return ResponseEntity.created(URI.create("/api/v1/trades/" + saved.getId())).body(mapper.toResponse(saved));
     }
 
     @PutMapping("/{id}")
@@ -77,7 +80,7 @@ public class TradeController {
                                 @AuthenticationPrincipal Object principal) {
         // TODO(TICKET-ADV065): delegate to service.update(id, req, actor) and
         //   map the updated entity through mapper.toResponse.
-        throw new UnsupportedOperationException("TICKET-ADV065");
+        return mapper.toResponse(service.update(id, req, String.valueOf(principal)));
     }
 
     @PatchMapping("/{id}/status")
@@ -87,7 +90,8 @@ public class TradeController {
                                       @AuthenticationPrincipal Object principal) {
         // TODO(TICKET-ADV066): read body.get("status") and call
         //   service.updateStatus(id, status, actor). Return mapper.toResponse(saved).
-        throw new UnsupportedOperationException("TICKET-ADV066");
+        String status = body.get("status");
+        return mapper.toResponse(service.updateStatus(id, status, String.valueOf(principal)));
     }
 
     @DeleteMapping("/{id}")
@@ -95,6 +99,7 @@ public class TradeController {
     public ResponseEntity<Void> delete(@PathVariable Long id,
                                        @AuthenticationPrincipal Object principal) {
         // TODO(TICKET-ADV067): service.softDelete(id, actor); return 204 No Content.
-        throw new UnsupportedOperationException("TICKET-ADV067");
+        service.softDelete(id, String.valueOf(principal));
+        return ResponseEntity.noContent().build();
     }
 }

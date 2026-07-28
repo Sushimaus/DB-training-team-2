@@ -60,6 +60,7 @@ public class TradeMetrics {
 
     public void incrementTradeCreated() {
         // TODO(TICKET-ADV083): increment the tradeCreated counter.
+        tradeCreated.increment();
     }
 
     public void recordTradeValue(double value) {

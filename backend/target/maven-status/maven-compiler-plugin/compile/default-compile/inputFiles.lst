@@ -2,6 +2,7 @@
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/config/OpenApiConfig.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/controller/AuditController.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/controller/AuthController.java
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/controller/DeprecatedTradeController.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/controller/ReconController.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/controller/TradeController.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/main/java/com/dbtraining/reconx/dto/LoginRequest.java

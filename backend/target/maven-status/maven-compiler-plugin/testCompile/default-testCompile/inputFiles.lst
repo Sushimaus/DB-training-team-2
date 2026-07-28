@@ -1,3 +1,8 @@
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/controller/AuditControllerTest.java
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/controller/ReconControllerTest.java
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/controller/TradeControllerWebMvcTest.java
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/integration/LiquibaseMigrationsIT.java
+/Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/integration/TradeLifecycleIT.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/model/EquityTradeTest.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/model/ReconciliationRuleTest.java
 /Users/sergeyzolotaykin/Desktop/DB/DB-training-team-2/backend/src/test/java/com/dbtraining/reconx/service/ReconciliationEngineTest.java

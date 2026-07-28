@@ -66,5 +66,6 @@ com/dbtraining/reconx/model/ReconciliationRule.class
 com/dbtraining/reconx/repository/AuditLogRepository.class
 com/dbtraining/reconx/model/FXTrade$Builder.class
 com/dbtraining/reconx/service/TradeService.class
+com/dbtraining/reconx/controller/DeprecatedTradeController.class
 com/dbtraining/reconx/model/TradeRef.class
 com/dbtraining/reconx/dto/TradeResponse.class

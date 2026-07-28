@@ -57,6 +57,9 @@ public class ReconController {
         // TODO(TICKET-ADV070): load the ReconBreak, call rb.resolve(note), save,
         //   and return 200 with the updated entity. Throw TradeNotFoundException
         //   when the id is unknown.
-        throw new UnsupportedOperationException("TICKET-ADV070");
+        ReconBreak rb = breaks.findById(id).orElseThrow(() -> new TradeNotFoundException("Recon break " + id + " not found"));
+        rb.resolve(body.getOrDefault("note", "manually resolved"));
+        breaks.save(rb);
+        return ResponseEntity.ok(rb);
     }
 }

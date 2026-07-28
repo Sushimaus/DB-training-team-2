@@ -20,63 +20,37 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(TradeNotFoundException.class)
     public ProblemDetail notFound(TradeNotFoundException ex) {
-        // TODO(TICKET-ADV062): return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setType(URI.create("https://reconx.dbtraining.com/errors/trade-not-found"));
-        problemDetail.setTitle("Trade not found");
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateTradeRefException.class)
     public ProblemDetail duplicate(DuplicateTradeRefException ex) {
-        // TODO(TICKET-ADV062): map DuplicateTradeRefException -> HttpStatus.CONFLICT (409).
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        problemDetail.setType(URI.create("https://reconx.dbtraining.com/errors/duplicate-trade-ref"));
-        problemDetail.setTitle("Duplicate trade reference");
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(InvalidTradeException.class)
     public ProblemDetail invalid(InvalidTradeException ex) {
-        // TODO(TICKET-ADV062): map InvalidTradeException -> HttpStatus.BAD_REQUEST (400).
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setType(URI.create("https://reconx.dbtraining.com/errors/invalid-trade"));
-        problemDetail.setTitle("Invalid trade");
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(ReconciliationMismatchException.class)
     public ProblemDetail mismatch(ReconciliationMismatchException ex) {
-        // TODO(TICKET-ADV062): map ReconciliationMismatchException -> HttpStatus.UNPROCESSABLE_ENTITY (422).
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
-        problemDetail.setType(URI.create("https://reconx.dbtraining.com/errors/reconciliation-mismatch"));
-        problemDetail.setTitle("Reconciliation Mismatch");
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail validation(MethodArgumentNotValidException ex) {
-        // TODO(TICKET-ADV062): join field errors ("field: message; ...") and return BAD_REQUEST ProblemDetail.
-        //   Hint: ex.getBindingResult().getFieldErrors().stream().map(...).collect(Collectors.joining("; "))
         String detail = ex.getBindingResult().getFieldErrors().stream()
-                .map(f -> f.getField() + ": " + f.getDefaultMessage())
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .collect(Collectors.joining("; "));
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
-        problemDetail.setTitle("Validation failed");
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail constraint(ConstraintViolationException ex) {
-        // TODO(TICKET-ADV062): map ConstraintViolationException -> HttpStatus.BAD_REQUEST (400).
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setType(URI.create("https://reconx.dbtraining.com/errors/constraint-violation"));
-        problemDetail.setTitle("Constraint Violation");
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }

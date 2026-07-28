@@ -21,7 +21,6 @@ import java.util.Map;
  *          {@link JwtAuthenticationFilter} turns into a GrantedAuthority.
  * WHY:     Self-contained (no DB hit per request) and stateless (no session).
  * OBSERVE: Decode any token at jwt.io with the configured secret.
- *
  * NOTE:   jjwt 0.12 uses .subject() / .issuer() / .claims() / .signWith() —
  *         the older 0.11 builder API (.setSubject etc.) is deprecated.
  * GOTCHA: HS256 needs a key of at least 256 bits — short secrets throw
@@ -46,6 +45,7 @@ public class JwtTokenProvider {
     public String generate(String email, String role) {
         Instant now = Instant.now();
         Instant exp = now.plusSeconds(expirationMinutes * 60);
+
         return Jwts.builder()
                 .subject(email)
                 .issuer(issuer)

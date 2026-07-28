@@ -60,6 +60,7 @@ public class ReconController {
         ReconBreak rb = breaks.findById(id).orElseThrow(() -> new TradeNotFoundException("Recon break " + id + " not found"));
         rb.resolve(body.getOrDefault("note", "manually resolved"));
         breaks.save(rb);
+        
         return ResponseEntity.ok(rb);
     }
 }

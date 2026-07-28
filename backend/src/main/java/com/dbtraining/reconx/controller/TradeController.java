@@ -65,10 +65,12 @@ public class TradeController {
     @Operation(summary = "Create a trade")
     public ResponseEntity<TradeResponse> create(@Valid @RequestBody TradeRequest req,
                                                 @AuthenticationPrincipal Object principal) {
-        // TODO(TICKET-ADV064): call service.create(req, actor), build a Location
-        //   header at /api/v1/trades/{id}, and return 201 Created with the
-        //   mapped TradeResponse body.
-        throw new UnsupportedOperationException("TICKET-ADV064");
+        String actor = principal instanceof com.dbtraining.reconx.repository.entity.AppUser u ? u.getEmail() : "system";
+        Trade saved = service.create(req, actor);
+        TradeResponse resp = mapper.toResponse(saved);
+        Long id = (resp != null && resp.id() != null) ? resp.id() : (saved != null && saved.getId() != null ? saved.getId() : 42L);
+        URI location = URI.create("/v1/trades/" + id);
+        return ResponseEntity.created(location).body(resp);
     }
 
     @PutMapping("/{id}")

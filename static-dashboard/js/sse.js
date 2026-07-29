@@ -1,15 +1,18 @@
 // TICKET-ADV106 / ADV107 — EventSource live feed with prepend + slide-in animation.
 (function () {
-  const feed = document.getElementById('trade-feed');
-  if (!feed) return;
+  const FEED_EL = document.getElementById('trade-feed');
+  if (!FEED_EL) return;
 
-  // Hardcoded demo events for the static dashboard (no backend required).
-  // Replace with: const sse = new EventSource('/api/v1/trades/stream');
-  const demoEvents = [
-    { tradeRef: 'EQU-20260603-0001', symbol: 'SAP.DE',  qty: 1000, price: 125.50, status: 'MATCHED' },
-    { tradeRef: 'FX-20260603-0001',  symbol: 'EUR/USD', qty: 1_000_000, price: 1.0852, status: 'PENDING' },
-    { tradeRef: 'EQU-20260603-0002', symbol: 'AAPL',    qty: 500,  price: 178.20, status: 'BREAK' },
-  ];
+  const STREAM_URL = '/api/v1/trades/stream';
+  let sse = null;
+  let connectionStatus = 'connecting';
+
+  function updateConnectionBadge(text, variant) {
+    const badge = document.getElementById('sse-status');
+    if (!badge) return;
+    badge.textContent = text;
+    badge.className = 'sse-status sse-status--' + variant;
+  }
 
   function prepend(trade) {
     const el = document.createElement('article');
@@ -20,8 +23,35 @@
       <span> qty=${trade.qty} </span>
       <span> price=${trade.price} </span>
       <span> [${trade.status}]</span>`;
-    feed.prepend(el);
+    FEED_EL.prepend(el);
   }
 
-  demoEvents.forEach((e, i) => setTimeout(() => prepend(e), 500 * i));
+  function connect() {
+    sse = new EventSource(STREAM_URL);
+
+    sse.onopen = () => {
+      connectionStatus = 'live';
+      updateConnectionBadge('Live', 'live');
+    };
+
+    sse.onmessage = (event) => {
+      try {
+        const trade = JSON.parse(event.data);
+        prepend(trade);
+      } catch (err) {
+        console.error('Failed to parse SSE trade event', err);
+      }
+    };
+
+    sse.onerror = () => {
+      connectionStatus = 'reconnecting';
+      updateConnectionBadge('Reconnecting…', 'reconnecting');
+      // Do NOT call connect() here — EventSource auto-reconnects with
+      // backoff on its own. Manually reconnecting would DDoS the dev server.
+    };
+  }
+
+  window.addEventListener('beforeunload', () => sse?.close());
+
+  connect();
 })();

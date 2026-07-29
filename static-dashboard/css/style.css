@@ -111,13 +111,15 @@ html, body { height: 100%; margin: 0; }
   min-width: var(--card-min-width);
 }
 
-/* tablet -> narrower sidebar */
+/* tablet -> narrower sidebar, cards go 2-across */
 @media (max-width: 1024px) {
   .app-sidebar { flex: 0 0 var(--layout-sidebar-width-tablet); }
+  .dashboard-grid > .stat-card { flex-basis: calc((100% - var(--space-4)) / 2); }
 }
 
-/* mobile -> sidebar stacks above main, cards go full width */
+/* mobile -> sidebar stacks above main, cards go full width, header shrinks */
 @media (max-width: 720px) {
+  .app-header { flex-basis: 56px; }
   .app-body { flex-direction: column; }
   .app-sidebar {
     flex: 0 0 auto;

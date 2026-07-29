@@ -91,6 +91,10 @@ html, body { height: 100%; margin: 0; }
   min-width: 240px;
 }
 
+.sse-status { font-size: 12px; padding: var(--space-1) var(--space-2); border-radius: var(--radius); background: rgba(255,255,255,0.15); color: #fff; }
+.sse-status--live { background: var(--color-success); }
+.sse-status--reconnecting { background: var(--color-warning); color: #1a1a1a; }
+
 /* tablet -> narrower sidebar, cards go 2-across */
 @media (max-width: 1024px) {
   .app-sidebar { flex: 0 0 180px; }

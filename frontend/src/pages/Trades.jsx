@@ -35,8 +35,18 @@ function Trades() {
           { key: 'price',    label: 'Price' },
           { key: 'status',   label: 'Status' },
         ]} />
-        {/* TODO(TICKET-ADV114): render a DataTable.Body with `rows={data.items}`
-            and a `render` prop that returns one <span> per column. */}
+        <DataTable.Body
+          rows={data.items}
+          render={(row) => (
+            <>
+              <span>{row.tradeRef}</span>
+              <span>{row.symbol}</span>
+              <span>{row.qty}</span>
+              <span>{row.price}</span>
+              <span>{row.status}</span>
+            </>
+          )}
+        />
         <DataTable.Pagination
           page={page}
           totalPages={Math.max(1, data.totalPages)}

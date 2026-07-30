@@ -1,6 +1,6 @@
 // TICKET-ADV114 — Compound DataTable.
 // TICKET-ADV117 — useDebouncedSearch.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withAuth } from '@components/withAuth.jsx';
 import DataTable from '@components/DataTable.jsx';
 import { useDebouncedSearch } from '@hooks/useDebouncedSearch.js';
@@ -17,6 +17,30 @@ function Trades() {
   //   - calls api.listTrades(params) and stores the response in `data`
   //   - re-runs whenever `page` or `debounced` changes
   //   - degrades gracefully on error (set empty page).
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTrades() {
+      try {
+        const params = { page };
+        if (debounced) params.status = debounced;
+        const response = await api.listTrades(params);
+        if (!cancelled) {
+          setData({
+            items: response.content ?? response.items ?? [],
+            totalPages: response.totalPages ?? 1,
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load trades', err);
+        if (!cancelled) setData({ items: [], totalPages: 0 });
+      }
+    }
+    
+    loadTrades();
+    return () => { cancelled = true; };
+  }, [page, debounced]);
 
   return (
     <section>
@@ -35,8 +59,18 @@ function Trades() {
           { key: 'price',    label: 'Price' },
           { key: 'status',   label: 'Status' },
         ]} />
-        {/* TODO(TICKET-ADV114): render a DataTable.Body with `rows={data.items}`
-            and a `render` prop that returns one <span> per column. */}
+        <DataTable.Body
+          rows={data.items}
+          render={(row) => (
+            <>
+              <span>{row.tradeRef}</span>
+              <span>{row.symbol}</span>
+              <span>{row.qty}</span>
+              <span>{row.price}</span>
+              <span>{row.status}</span>
+            </>
+          )}
+        />
         <DataTable.Pagination
           page={page}
           totalPages={Math.max(1, data.totalPages)}

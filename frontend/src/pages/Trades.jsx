@@ -1,6 +1,6 @@
 // TICKET-ADV114 — Compound DataTable.
 // TICKET-ADV117 — useDebouncedSearch.
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { withAuth } from '@components/withAuth.jsx';
 import DataTable from '@components/DataTable.jsx';
 import { useDebouncedSearch } from '@hooks/useDebouncedSearch.js';
@@ -12,6 +12,10 @@ function Trades() {
   const debounced = useDebouncedSearch(search, 300);
   const [page, setPage] = useState(0);
   const [data, setData] = useState({ items: [], totalPages: 0 });
+
+  // Reference-stable across renders — onClick prop on <TradeRow> won't
+  // change identity on unrelated re-renders, so its React.memo holds.
+  const handleSelect = useCallback((id) => console.log('clicked', id), []);
 
   // TODO(TICKET-ADV114 + ADV117): useEffect that:
   //   - builds a query string from `page` and `debounced` (status filter)
@@ -63,7 +67,7 @@ function Trades() {
         <DataTable.Body
           rows={data.items}
           render={(row) => (
-            <TradeRow trade={row} onClick={(id) => console.log('clicked', id)} />
+            <TradeRow trade={row} onClick={handleSelect} />
           )}
         />
         <DataTable.Pagination

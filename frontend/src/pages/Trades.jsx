@@ -5,6 +5,7 @@ import { withAuth } from '@components/withAuth.jsx';
 import DataTable from '@components/DataTable.jsx';
 import { useDebouncedSearch } from '@hooks/useDebouncedSearch.js';
 import { api } from '@services/apiService.js';
+import { TradeRow } from '@components/TradeRow.jsx';
 
 function Trades() {
   const [search, setSearch] = useState('');
@@ -62,13 +63,7 @@ function Trades() {
         <DataTable.Body
           rows={data.items}
           render={(row) => (
-            <>
-              <span>{row.tradeRef}</span>
-              <span>{row.symbol}</span>
-              <span>{row.qty}</span>
-              <span>{row.price}</span>
-              <span>{row.status}</span>
-            </>
+            <TradeRow trade={row} onClick={(id) => console.log('clicked', id)} />
           )}
         />
         <DataTable.Pagination

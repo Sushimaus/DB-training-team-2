@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ============================================================================
+ TICKET-ADV136 — dlq_messages
+ WHAT:    Stores one persisted row per failed trade-event message that landed
+          on the Kafka DLQ.
+ WHY:     Operators need a durable record they can inspect and replay by
+          eventId after the root cause is fixed.
+ ============================================================================
+-->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="009-create-dlq-messages" author="trainer">
+        <createTable tableName="dlq_messages">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="event_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="trade_ref" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_topic" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partition_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset_value" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actor" type="VARCHAR(100)"/>
+            <column name="before_state" type="VARCHAR(1000000)"/>
+            <column name="after_state" type="VARCHAR(1000000)"/>
+            <column name="failure_reason" type="VARCHAR(1000000)"/>
+            <column name="first_seen" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="dlq_messages" indexName="idx_dlq_messages_event_id">
+            <column name="event_id"/>
+        </createIndex>
+
+        <rollback>
+            <dropTable tableName="dlq_messages"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

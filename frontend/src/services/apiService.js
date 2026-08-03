@@ -32,36 +32,48 @@ async function request(method, path, body) {
   return res.json();
 }
 
+function toQueryString(params) {
+  if (!params || typeof params !== 'object') return '';
+  const usp = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      usp.set(key, value);
+    }
+  });
+  const qs = usp.toString();
+  return qs ? `?${qs}` : '';
+}
 
 export const api = {
-  login: (email, password)   => {
+  login: (email, password) => {
     return request('POST', '/auth/login', { email, password });
   },
-  listTrades: (params = '')  => {
-    // TODO(TICKET-ADV114): GET /v1/trades + `params` query string.
-    throw new Error('TICKET-ADV114 not implemented');
+
+  listTrades: (params = {}) => {
+    return request('GET', `/v1/trades${toQueryString(params)}`);
   },
-  createTrade: (req)         => {
-    // TODO(TICKET-ADV123): POST /v1/trades with the form payload.
-    throw new Error('TICKET-ADV123 not implemented');
+
+  createTrade: (req) => {
+    return request('POST', '/v1/trades', req);
   },
+
   updateStatus: (id, status) => {
     // TODO(TICKET-ADV119): PATCH /v1/trades/{id}/status with { status }.
     throw new Error('TICKET-ADV119 not implemented');
   },
-  deleteTrade: (id)          => {
+  deleteTrade: (id) => {
     // TODO(TICKET-ADV119): DELETE /v1/trades/{id}.
     throw new Error('TICKET-ADV119 not implemented');
   },
-  runRecon: (req)            => {
+  runRecon: (req) => {
     // TODO(TICKET-ADV121): POST /v1/recon/run to enqueue a recon job.
     throw new Error('TICKET-ADV121 not implemented');
   },
-  reconResults: (jobId)      => {
+  reconResults: (jobId) => {
     // TODO(TICKET-ADV121): GET /v1/recon/jobs/{jobId}/results.
     throw new Error('TICKET-ADV121 not implemented');
   },
-  audit: (tradeRef)          => {
+  audit: (tradeRef) => {
     // TODO(TICKET-ADV121): GET /v1/audit/trades/{tradeRef}.
     throw new Error('TICKET-ADV121 not implemented');
   },

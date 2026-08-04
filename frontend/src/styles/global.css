@@ -91,6 +91,26 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 [data-theme="dark"] .status-pill--warning { color: var(--color-warning); }
 
+/* Copy-to-clipboard button next to tradeRef, with a transient "Copied!" toast */
+.trade-ref-cell { display: flex; align-items: center; gap: var(--space-1); }
+.copy-trade-ref { position: relative; display: inline-flex; align-items: center; }
+.copy-trade-ref__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; padding: 0;
+  border: none; background: transparent; color: var(--color-text);
+  opacity: 0.5; cursor: pointer; border-radius: var(--radius);
+}
+.copy-trade-ref__btn:hover { opacity: 1; background: var(--color-surface); }
+.copy-trade-ref__toast {
+  position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+  background: var(--color-text); color: var(--color-bg);
+  font-size: 11px; padding: 2px 6px; border-radius: var(--radius);
+  white-space: nowrap; pointer-events: none;
+}
+
+/* Trades page toolbar — filter input + Export CSV button */
+.trades-toolbar { display: flex; gap: var(--space-2); align-items: center; margin: var(--space-2) 0; }
+
 /* TICKET-ADV113 — error boundary fallback */
 .error-fallback { padding: var(--space-4); border: 1px solid var(--color-danger); border-radius: var(--radius); background: var(--color-surface); }
 

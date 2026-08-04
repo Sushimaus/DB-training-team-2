@@ -7,6 +7,30 @@ import { useDebouncedSearch } from '@hooks/useDebouncedSearch.js';
 import { api } from '@services/apiService.js';
 import { TradeRow } from '@components/TradeRow.jsx';
 
+const CSV_COLUMNS = ['Ref', 'Symbol', 'Qty', 'Price', 'Status'];
+
+function csvEscape(value) {
+  const str = String(value ?? '');
+  return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
+function tradesToCsv(items) {
+  const rows = items.map((t) => [t.tradeRef, t.instrumentSymbol, t.quantity, t.price, t.status]);
+  return [CSV_COLUMNS, ...rows].map((row) => row.map(csvEscape).join(',')).join('\r\n');
+}
+
+function downloadCsv(filename, csv) {
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 function Trades() {
   const [search, setSearch] = useState('');
   const debounced = useDebouncedSearch(search, 300);
@@ -17,6 +41,11 @@ function Trades() {
   // change identity on unrelated re-renders, so its React.memo holds.
   // No row-selection UI consumes the id yet; this is a placeholder handler.
   const handleSelect = useCallback((_id) => {}, []);
+
+  function handleExportCsv() {
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadCsv(`trades-${stamp}.csv`, tradesToCsv(data.items));
+  }
 
   // TODO(TICKET-ADV114 + ADV117): useEffect that:
   //   - builds a query string from `page` and `debounced` (status filter)
@@ -52,12 +81,17 @@ function Trades() {
   return (
     <section>
       <h2>Trades</h2>
-      <input
-        aria-label="Filter by status"
-        placeholder="status filter (PENDING/MATCHED/…)"
-        value={search}
-        onChange={(e) => setSearch(e.target.value.toUpperCase())}
-      />
+      <div className="trades-toolbar">
+        <input
+          aria-label="Filter by status"
+          placeholder="status filter (PENDING/MATCHED/…)"
+          value={search}
+          onChange={(e) => setSearch(e.target.value.toUpperCase())}
+        />
+        <button type="button" onClick={handleExportCsv} disabled={data.items.length === 0}>
+          Export CSV
+        </button>
+      </div>
       <DataTable>
         <DataTable.Header columns={[
           { key: 'tradeRef', label: 'Ref' },

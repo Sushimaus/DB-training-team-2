@@ -45,6 +45,14 @@ body {
 .layout__nav a:hover { text-decoration: underline; }
 .layout__main   { padding: var(--space-4); }
 
+/* Theme toggle — sits at the right of the header, after the nav */
+.theme-toggle {
+  border: none; background: transparent; color: #fff;
+  font-size: 18px; line-height: 1; padding: var(--space-1);
+  border-radius: var(--radius); cursor: pointer;
+}
+.theme-toggle:hover { background: rgba(255, 255, 255, 0.15); }
+
 .loader { padding: var(--space-4); color: var(--color-text); }
 
 /* TICKET-ADV101 / ADV110 — BEM stat cards + trade cards */

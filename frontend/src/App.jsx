@@ -2,6 +2,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { withErrorBoundary } from '@components/withErrorBoundary.jsx';
+import { useTheme } from '@context/ThemeContext.jsx';
 
 // TODO(TICKET-ADV122): wrap each page import in React.lazy() so Vite emits a
 // separate chunk per route. The <Suspense> fallback below shows while the
@@ -10,6 +11,22 @@ const Dashboard = lazy(() => import('@pages/Dashboard.jsx'));
 const Trades    = lazy(() => import('@pages/Trades.jsx'));
 const AddTrade  = lazy(() => import('@pages/AddTrade.jsx'));
 const Login     = lazy(() => import('@pages/Login.jsx'));
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggle}
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+      title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+    >
+      {isDark ? '☀️' : '🌙'}
+    </button>
+  );
+}
 
 function App() {
   return (
@@ -21,6 +38,7 @@ function App() {
           <Link to="/trades">Trades</Link>
           <Link to="/trades/new">Add trade</Link>
         </nav>
+        <ThemeToggle />
       </header>
       <main className="layout__main">
         <Suspense fallback={<div className="loader">Loading…</div>}>

@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import { TradeRow } from '../../components/TradeRow.jsx';
 
-const trade = { id: 1, tradeRef: 'T-1', symbol: 'AAPL', qty: 10, price: 245.5, status: 'PENDING' };
+const trade = { id: 1, tradeRef: 'T-1', instrumentSymbol: 'AAPL', quantity: 10, price: 245.5, status: 'PENDING' };
 
 // Mirrors the Trades.jsx pattern: a parent with unrelated state (`tick`)
 // re-rendering above a memoised <TradeRow>, using a useCallback handler.

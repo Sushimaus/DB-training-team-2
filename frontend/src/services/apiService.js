@@ -57,23 +57,23 @@ export const api = {
     return request('POST', '/v1/trades', req);
   },
 
-  updateStatus: (id, status) => {
+  updateStatus: (_id, _status) => {
     // TODO(TICKET-ADV119): PATCH /v1/trades/{id}/status with { status }.
     throw new Error('TICKET-ADV119 not implemented');
   },
-  deleteTrade: (id) => {
+  deleteTrade: (_id) => {
     // TODO(TICKET-ADV119): DELETE /v1/trades/{id}.
     throw new Error('TICKET-ADV119 not implemented');
   },
-  runRecon: (req) => {
+  runRecon: (_req) => {
     // TODO(TICKET-ADV121): POST /v1/recon/run to enqueue a recon job.
     throw new Error('TICKET-ADV121 not implemented');
   },
-  reconResults: (jobId) => {
+  reconResults: (_jobId) => {
     // TODO(TICKET-ADV121): GET /v1/recon/jobs/{jobId}/results.
     throw new Error('TICKET-ADV121 not implemented');
   },
-  audit: (tradeRef) => {
+  audit: (_tradeRef) => {
     // TODO(TICKET-ADV121): GET /v1/audit/trades/{tradeRef}.
     throw new Error('TICKET-ADV121 not implemented');
   },

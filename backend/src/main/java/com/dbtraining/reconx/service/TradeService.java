@@ -56,15 +56,8 @@ public class TradeService {
     }
 
     public Trade create(TradeRequest req, String actor) {
-        // TODO(TICKET-ADV064): reject duplicate tradeRef via DuplicateTradeRefException,
-        //   build a new Trade with instrument + counterparty looked up from
-        //   their repos (throw TradeNotFoundException on miss), status = "PENDING",
-        //   save, then:
-        //     - metrics.incrementTradeCreated() + metrics.recordTradeValue(qty*price) — TICKET-ADV083
-        //     - events.publish(new TradeEvent(... TRADE_CREATED ... actor ...)) — TICKET-ADV129
-
-        if (tradeRepo.findByTradeRef(req.tradeRef()) != null) {
-        throw new DuplicateTradeRefException(req.tradeRef());
+        if (tradeRepo.findByTradeRef(req.tradeRef()).isPresent()) {
+            throw new DuplicateTradeRefException(req.tradeRef());
         }
         var instrument = instRepo.findById(req.instrumentId())
             .orElseThrow(() -> new TradeNotFoundException("instrument id=" + req.instrumentId()));
@@ -85,7 +78,17 @@ public class TradeService {
         Trade saved = tradeRepo.save(trade);
         metrics.incrementTradeCreated();
         metrics.recordTradeValue(saved.getQuantity().multiply(saved.getPrice()).doubleValue());
-        
+
+        events.publish(new TradeEvent(
+                UUID.randomUUID(),
+                saved.getTradeRef(),
+                TradeEvent.EventType.TRADE_CREATED,
+                Instant.now(),
+                actor,
+                null,
+                "{\"status\":\"" + saved.getStatus() + "\"}"
+        ));
+
         return saved;
 
     }

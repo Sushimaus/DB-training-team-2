@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+============================================================================
+TICKET-ADV157 — Static analysis (Checkstyle)
+
+Starting point: Google Java Style's structural/correctness checks, minus
+the rules that are pure noise for this codebase (Javadoc-on-everything,
+strict import ordering, 100-char line limit). The goal is to catch real
+mistakes (unused imports, missing braces, duplicate/dead code, bad
+equals/hashCode pairs) without blocking on formatting nitpicks.
+============================================================================
+-->
+<module name="Checker">
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Generous line length — flags genuinely unwieldy lines, not normal Java. -->
+    <module name="LineLength">
+        <property name="max" value="160"/>
+        <property name="ignorePattern" value="^import .*$"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Imports.
+             AvoidStarImport is deliberately OFF: this codebase idiomatically
+             uses `jakarta.persistence.*`, `jakarta.validation.constraints.*`,
+             and `org.springframework.web.bind.annotation.*` throughout — all
+             common, unambiguous Spring/JPA convention, not a real smell. -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- Blocks / braces.
+             NeedBraces is ON — missing braces around an if/for body is a real
+             bug-prone pattern (the classic "goto fail" shape).
+             LeftCurly/RightCurly (brace placement) and OneStatementPerLine are
+             OFF: this codebase consistently uses compact one-line guard clauses
+             like `if (x) { return; }`, which both rules flag on every single
+             occurrence (185 of this ruleset's 225 original violations were
+             exactly this one stylistic pattern) — noise, not a correctness
+             signal, so tuned out per the "disable the noisiest rules" brief. -->
+        <module name="EmptyBlock">
+            <property name="option" value="text"/>
+        </module>
+        <module name="NeedBraces"/>
+
+        <!-- Correctness -->
+        <module name="EqualsHashCode"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="FallThrough"/>
+
+        <!-- Naming conventions.
+             ConstantName is OFF: its only hits in this codebase are on
+             `private static final Logger log`, the universal SLF4J
+             convention — enforcing ALL_CAPS on that would fight the
+             ecosystem's own idiom, not catch a real naming mistake. -->
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="MemberName"/>
+        <module name="LocalVariableName"/>
+        <module name="PackageName"/>
+
+        <!-- Size — a method this long is a real maintainability smell -->
+        <module name="MethodLength">
+            <property name="max" value="150"/>
+        </module>
+    </module>
+</module>

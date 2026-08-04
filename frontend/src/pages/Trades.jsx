@@ -15,7 +15,8 @@ function Trades() {
 
   // Reference-stable across renders — onClick prop on <TradeRow> won't
   // change identity on unrelated re-renders, so its React.memo holds.
-  const handleSelect = useCallback((id) => console.log('clicked', id), []);
+  // No row-selection UI consumes the id yet; this is a placeholder handler.
+  const handleSelect = useCallback((_id) => {}, []);
 
   // TODO(TICKET-ADV114 + ADV117): useEffect that:
   //   - builds a query string from `page` and `debounced` (status filter)
@@ -38,6 +39,7 @@ function Trades() {
           });
         }
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Failed to load trades', err);
         if (!cancelled) setData({ items: [], totalPages: 0 });
       }

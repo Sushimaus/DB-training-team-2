@@ -49,6 +49,7 @@ public class TradeAggregator {
             switch (TradeEvent.EventType.valueOf(e.getEventType())) {
                 case TRADE_CREATED, TRADE_UPDATED -> state = readJson(e.getAfterState());
                 case TRADE_CANCELLED -> state = null;
+                default -> throw new IllegalStateException("Unhandled event type: " + e.getEventType());
             }
         }
         return Optional.ofNullable(state);

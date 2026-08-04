@@ -38,6 +38,11 @@
         <jjwt.version>0.12.6</jjwt.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <hypersistence.version>3.9.0</hypersistence.version>
+        <!-- TICKET-ADV155 — defaults for `mvn liquibase:validate` against the
+             local docker-compose Postgres; override with -D for CI's ephemeral DB. -->
+        <liquibase.url>jdbc:postgresql://localhost:5432/reconx</liquibase.url>
+        <liquibase.username>reconx_user</liquibase.username>
+        <liquibase.password>reconx_pass</liquibase.password>
     </properties>
 
     <dependencies>
@@ -200,6 +205,43 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- TICKET-ADV155 — Liquibase validate step in CI. Defaults target the
+                 local docker-compose Postgres (same reconx/reconx_user credentials
+                 the dev stack already uses); CI overrides url/username/password
+                 with -D flags against its own ephemeral service container. -->
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.31.1</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+                    <url>${liquibase.url}</url>
+                    <username>${liquibase.username}</username>
+                    <password>${liquibase.password}</password>
+                </configuration>
+            </plugin>
+            <!-- TICKET-ADV157 — static analysis. Bound to validate so violations
+                 fail the build before compilation/tests even start. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

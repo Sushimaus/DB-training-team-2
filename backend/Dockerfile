@@ -7,7 +7,7 @@
 
 FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace
-COPY pom.xml mvnw ./
+COPY pom.xml mvnw checkstyle.xml checkstyle-suppressions.xml ./
 COPY .mvn .mvn
 RUN ./mvnw -q -B dependency:go-offline || true
 COPY src src

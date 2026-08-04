@@ -4,8 +4,8 @@ function TradeRowImpl({ trade, onClick }) {
   return (
     <tr onClick={() => onClick(trade.id)}>
       <td>{trade.tradeRef}</td>
-      <td>{trade.symbol}</td>
-      <td>{trade.qty}</td>
+      <td>{trade.instrumentSymbol}</td>
+      <td>{trade.quantity}</td>
       <td>{trade.price}</td>
       <td>
         <span className={`status-pill status-pill--${trade.status.toLowerCase()}`}>

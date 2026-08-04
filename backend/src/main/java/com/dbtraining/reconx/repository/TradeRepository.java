@@ -3,6 +3,8 @@ package com.dbtraining.reconx.repository;
 import com.dbtraining.reconx.repository.entity.Trade;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +24,17 @@ public interface TradeRepository
         extends JpaRepository<Trade, Long>, JpaSpecificationExecutor<Trade> {
 
     Optional<Trade> findByTradeRef(String tradeRef);
+
+    // instrument/counterparty are LAZY on Trade; the service methods' @Transactional
+    // boundary closes before TradeController maps the result to a DTO, so without
+    // these fetch joins the mapper throws LazyInitializationException.
+    @Override
+    @EntityGraph(attributePaths = {"instrument", "counterparty"})
+    Page<Trade> findAll(Specification<Trade> spec, Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = {"instrument", "counterparty"})
+    Optional<Trade> findById(Long id);
 
     @Query("""
         SELECT t FROM Trade t

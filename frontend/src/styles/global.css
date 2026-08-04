@@ -73,6 +73,24 @@ body {
 button { padding: var(--space-2) var(--space-3); border: 1px solid var(--color-primary); background: var(--color-primary); color: #fff; border-radius: var(--radius); cursor: pointer; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* Status pill — color-coded trade status badge in the Trades table */
+.status-pill {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+.status-pill--success { background: color-mix(in srgb, var(--color-success) 20%, transparent); color: var(--color-success); }
+.status-pill--warning { background: color-mix(in srgb, var(--color-warning) 25%, transparent); color: #7a5b00; }
+.status-pill--danger  { background: color-mix(in srgb, var(--color-danger) 20%, transparent);  color: var(--color-danger); }
+.status-pill--neutral { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
+
+[data-theme="dark"] .status-pill--warning { color: var(--color-warning); }
+
 /* TICKET-ADV113 — error boundary fallback */
 .error-fallback { padding: var(--space-4); border: 1px solid var(--color-danger); border-radius: var(--radius); background: var(--color-surface); }
 

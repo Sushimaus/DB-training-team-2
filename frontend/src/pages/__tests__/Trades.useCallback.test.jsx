@@ -67,11 +67,9 @@ describe('<TradeRow> renders correctly with a useCallback-provided onClick', () 
     function Harness() {
       const handleSelect = useCallback((id) => clicks.push(id), []);
       return (
-        <table>
-          <tbody>
-            <TradeRow trade={trade} onClick={handleSelect} />
-          </tbody>
-        </table>
+        <div role="row">
+          <TradeRow trade={trade} onClick={handleSelect} />
+        </div>
       );
     }
 
